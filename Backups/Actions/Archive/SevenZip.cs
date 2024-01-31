@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Backups.Infrastructure;
+using Microsoft.Identity.Client;
 
 namespace Backups.Actions.Archive;
 
@@ -7,9 +8,13 @@ public record AddFileToZipParameters(string Password, string ZipFilePath, string
 
 public record UnzipFileParameters(string Password, string ZipFilePath, string UnzipPath);
 
+public record TestZipParameters(string Password, string ZipFilePath);
+
+
 public interface ISevenZip
 {
     void AddFileToZip(AddFileToZipParameters addFileToZipParameters);
+    void TestZip(TestZipParameters testZipParameters);
     void UnzipFile(UnzipFileParameters unzipFileParameters);
 }
 
@@ -63,5 +68,17 @@ public class SevenZip : ISevenZip{
         process.WaitForExit();
 
         if (!string.IsNullOrWhiteSpace(err)) throw new Exception(err);
+    }
+
+    public void TestZip(TestZipParameters testZipParameters)
+    {
+        if (string.IsNullOrWhiteSpace(testZipParameters.Password))
+        {
+            throw new PasswordEmptyException();
+        }
+
+        
+        ExecuteSevenZip(
+            $"t \"{testZipParameters.ZipFilePath}\" -p{testZipParameters.Password}");
     }
 }

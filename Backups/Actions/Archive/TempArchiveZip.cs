@@ -30,7 +30,8 @@ public class TempArchiveZip : ITempArchiveZip
         {
             _sevenZip.AddFileToZip(new AddFileToZipParameters(password, tempFilePath, trackedFile));
         });
-        
+        _sevenZip.TestZip(new TestZipParameters(password, tempFilePath));
+        Console.WriteLine(new CheckSum(_fileSystem).Get(tempFilePath));
         return tempFilePath;
     }
 

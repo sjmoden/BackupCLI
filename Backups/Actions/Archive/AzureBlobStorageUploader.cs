@@ -14,10 +14,7 @@ public class AzureBlobStorageUploader : IAzureBlobStorageUploader
         var blobClientContainer = blobServiceClient.GetBlobContainerClient(uploadParameters.Container);
         var blobClient = blobClientContainer.GetBlobClient(uploadParameters.BlobPath);
 
-        blobClient.Upload(uploadParameters.FilePath, new BlobUploadOptions
-        {
-            AccessTier = AccessTier.Archive
-        });
+        blobClient.Upload(uploadParameters.FilePath);
     }
 }
 

@@ -25,12 +25,13 @@ public class Archive
     public void Execute()
     {
         var backupSettings = _backupSettingsReader.Read(Environment.CurrentDirectory);
+        var password = _keyVaultPasswordRetriever.GetOrCreateANewPassword(backupSettings.FileName);
         if (!backupSettings.HaveFilesChangedSinceLastUploadAndUpdateRegister())
         {
             return;
         }
-        var password = _keyVaultPasswordRetriever.GetOrCreateANewPassword(backupSettings.FileName);
         var zipFileToTempFolder = _zip.ZipFileToTempFolder(backupSettings, password);
+        
         try
         {
             _azureBlobStorageUploader.Upload(new UploadParameters(backupSettings.AzureStorageAccountName,
@@ -39,7 +40,7 @@ public class Archive
         }
         finally
         {
-            _zip.DeleteTempZip(zipFileToTempFolder);            
-        }
+           // _zip.DeleteTempZip(zipFileToTempFolder);            
+        } 
     }
 }

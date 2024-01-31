@@ -12,10 +12,11 @@ public class CheckSum
         _fileSystem = fileSystem;
     }
 
-    public string Get(string file1Path)
+    public string Get(string filePath)
     {
-        using var md5 = MD5.Create();
-        using var stream = _fileSystem.File.OpenRead(file1Path);
-        return BitConverter.ToString(md5.ComputeHash(stream));
+        Console.WriteLine($"Calculating Checksum for {filePath}");
+        using var sha = SHA512.Create();
+        using var stream = _fileSystem.File.OpenRead(filePath);
+        return Convert.ToBase64String(sha.ComputeHash(stream));
     }
 }
