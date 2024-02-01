@@ -14,8 +14,8 @@ public class CheckSum
 
     public string Get(string file1Path)
     {
-        using var md5 = MD5.Create();
+        using var sha = SHA512.Create();
         using var stream = _fileSystem.File.OpenRead(file1Path);
-        return BitConverter.ToString(md5.ComputeHash(stream));
+        return BitConverter.ToString(sha.ComputeHash(stream));
     }
 }
